@@ -1,0 +1,21 @@
+services:
+  # Node.js Backend Service
+  - type: web
+    name: worms-multiplayer-server
+    env: node
+    region: frankfurt # Choose your preferred region
+    plan: free
+    buildCommand: npm install && npm run build:server
+    startCommand: node src/networking/Server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+
+  # Static Web Service for the Frontend
+  - type: web
+    name: worms-static-frontend
+    env: static
+    region: frankfurt
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: . # Serves the root directory where index.htm is located
