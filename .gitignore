@@ -43,4 +43,6 @@ data/
 .Trashes
 Icon?
 ehthumbs.db
+thumbs.db
 Thumbs.db
+node_modules

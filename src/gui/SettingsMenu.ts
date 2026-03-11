@@ -4,7 +4,7 @@
  * allows them to start the game and shows them the controls.
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 ///<reference path="../Settings.ts" />

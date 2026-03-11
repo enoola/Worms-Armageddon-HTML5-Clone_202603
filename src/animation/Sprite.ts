@@ -4,7 +4,7 @@
  * Its normally a base class for most objects in game like the Worm. 
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 ///<reference path="../Game.ts"/>
@@ -16,8 +16,8 @@ class Sprite
     spriteDef;
     currentFrameY: number;
 
-    finished: bool;
-    noLoop: bool;
+    finished: boolean;
+    noLoop: boolean;
     lastUpdateTime;
     accumulateDelta;
     isSpriteLocked;
@@ -131,7 +131,7 @@ class Sprite
 
     }
 
-    setNoLoop(val: bool)
+    setNoLoop(val: boolean)
     {
         this.noLoop = val;
     }

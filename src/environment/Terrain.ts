@@ -5,7 +5,7 @@
  * constructs box2d objects which make up the terrain. It also handles deformations
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 ///<reference path="../system/Physics.ts"/>
@@ -103,7 +103,7 @@ class Terrain
         var bodiesCreated = 0;
 
         // Used to create a single rect out of a series of consecnative solid 
-        var makeBlock = function () => {
+        var makeBlock = () => {
 
             fixDef.shape.SetAsBox((rectWidth / worldScale) / 2, (rectheight / worldScale) / 2);
             bodyDef.position.x = ((xPos / 4) - (rectWidth / 2)) / worldScale;
@@ -216,7 +216,7 @@ class Terrain
                 Physics.pixelToMeters( y + normalizedRadis)
             );
 
-            Physics.world.QueryAABB(function (fixture) =>
+            Physics.world.QueryAABB((fixture) =>
             {
                 if (fixture.GetBody().GetType() == b2Body.b2_staticBody && fixture.GetBody().GetUserData() instanceof Terrain)
                 {

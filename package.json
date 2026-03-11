@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "tsc --outFile src/Worms.js src/Main.ts",
+    "build:server": "tsc src/networking/Server.ts"
+  },
+  "dependencies": {
+    "validator": "^13.15.26"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

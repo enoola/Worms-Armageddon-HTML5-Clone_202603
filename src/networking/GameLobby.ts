@@ -4,29 +4,31 @@
  * GameLobby.js
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 
 ///<reference path="../Game.ts"/>
 ///<reference path="ServerUtilies.ts"/>
+///<reference path="ServerSettings.ts"/>
+///<reference path="Events.ts"/>
+
+declare var global: any;
 
 // Had to give up the benfits of types in this instance, as a problem with the way ES6/Typescript module system
 // works with Node.js modules. http://stackoverflow.com/questions/13444064/typescript-conditional-module-import-export
 //declare function require(s);
 
-try
-{
-//This is some mega hacky stuff, but its the only way I can get around a very strange typescript static anaylse error which
-// prevents the project from compling.
-    eval(" var Events = require('./Events');var ServerUtilies = require('./ServerUtilies');var Util = require('util');var ServerSettings = require('./ServerSettings');");
+try {
+    //This is some mega hacky stuff, but its the only way I can get around a very strange typescript static anaylse error which
+    // prevents the project from compling.
+    global.Events = require('./Events'); global.ServerUtilies = require('./ServerUtilies'); global.Util = require('util'); global.ServerSettings = require('./ServerSettings');
 
 } catch (error) { }
 
 var SOCKET_STORAGE_GAMELOBBY_ID = 'gameLobbyId';
 
-class GameLobby
-{
+class GameLobby {
     static LOBBY_STATS = {
         WATTING_FOR_PLAYERS: 0,
         GAME_IN_PLAY: 1
@@ -44,8 +46,7 @@ class GameLobby
 
     static gameLobbiesCounter = 0;
 
-    constructor(name: string, numberOfPlayers: number, mapName : string  = "priates" )
-    {
+    constructor(name: string, numberOfPlayers: number, mapName: string = "priates") {
         this.name = name;
         this.mapName = mapName;
         this.playerIds = [];
@@ -54,29 +55,25 @@ class GameLobby
         this.status = GameLobby.LOBBY_STATS.WATTING_FOR_PLAYERS;
     }
 
-    getNumberOfPlayers()
-    {
+    getNumberOfPlayers() {
         return this.gameLobbyCapacity;
     }
 
-    getPlayerSlots(){
+    getPlayerSlots() {
         return this.playerIds.length;
     }
 
-    server_init()
-    {
+    server_init() {
         this.id = ServerUtilies.createToken() + GameLobby.gameLobbiesCounter;
         GameLobby.gameLobbiesCounter++;
     }
 
-    client_init()
-    {
+    client_init() {
         //Have the host client setup all the player objects with all the other clients ids
-        Client.socket.on(Events.gameLobby.START_GAME_HOST, function (data) =>
-        {
+        Client.socket.on(Events.gameLobby.START_GAME_HOST, (data) => {
             var gameLobby = (Utilies.copy(new GameLobby(null, null), data));
             Game.map = new Map(Maps[gameLobby.mapName]);
-            
+
             //Update local copy of the lobby
             GameInstance.lobby.client_GameLobby = gameLobby;
             //Pass player ids to init the game
@@ -89,17 +86,15 @@ class GameLobby
 
         // Start the game for all other playrs by passing the player information create
         // by the host client to them.
-        Client.socket.on(Events.gameLobby.START_GAME_FOR_OTHER_CLIENTS, function (data) =>
-        {
-             var gameLobby = (Utilies.copy(new GameLobby(null, null), data.lobby));          
-             Game.map = new Map(Maps[gameLobby.mapName]);
+        Client.socket.on(Events.gameLobby.START_GAME_FOR_OTHER_CLIENTS, (data) => {
+            var gameLobby = (Utilies.copy(new GameLobby(null, null), data.lobby));
+            Game.map = new Map(Maps[gameLobby.mapName]);
 
-             //Update local copy of the lobby
+            //Update local copy of the lobby
             GameInstance.lobby.client_GameLobby = gameLobby;
 
             //Just popluate the array with some players, we will override them with proper data now
-            for (var i = 0; i <  gameLobby.playerIds.length ; i++)
-            {
+            for (var i = 0; i < gameLobby.playerIds.length; i++) {
                 GameInstance.players.push(new Player(gameLobby.playerIds[i]));
             }
 
@@ -107,30 +102,25 @@ class GameLobby
             GameInstance.start();
         });
 
-        Client.socket.on(Events.gameLobby.PLAYER_DISCONNECTED, function (playerId)
-        {
+        Client.socket.on(Events.gameLobby.PLAYER_DISCONNECTED, function (playerId) {
             Logger.log("Events.gameLobby.PLAYER_DISCONNECTED " + playerId);
 
 
-            for (var j = GameInstance.players.length - 1; j >= 0; j--)
-            {
-                if (GameInstance.players[j].id == playerId)
-                {
+            for (var j = GameInstance.players.length - 1; j >= 0; j--) {
+                if (GameInstance.players[j].id == playerId) {
                     Notify.display(
                         GameInstance.players[j].getTeam().name + " has disconnected ",
                         "Looks like you were too much competition for them. They just gave up, well done!! Although they might have just lost connection... though we will say you won =)",
-                    13000)
+                        13000)
 
                     var worms = GameInstance.players[j].getTeam().getWorms();
                     //Kill all the players worms.
-                    for (var i = 0; i < worms.length; i++)
-                    {
-                        worms[i].hit(999,null,true);
+                    for (var i = 0; i < worms.length; i++) {
+                        worms[i].hit(999, null, true);
                     }
 
                     //If the user who disconnected is the current one signal next turn
-                    if (GameInstance.players[j].id == GameInstance.state.getCurrentPlayer().id)
-                    {
+                    if (GameInstance.players[j].id == GameInstance.state.getCurrentPlayer().id) {
                         GameInstance.state.tiggerNextTurn();
                     }
                     return;
@@ -142,12 +132,9 @@ class GameLobby
 
     }
 
-    contains(playerId: string) : bool
-    {
-        for (var i in this.playerIds)
-        {          
-            if (this.playerIds[i] == playerId)
-            {
+    contains(playerId: string): boolean {
+        for (var i in this.playerIds) {
+            if (this.playerIds[i] == playerId) {
                 return true;
             }
         }
@@ -155,16 +142,13 @@ class GameLobby
         return false;
     }
 
-    isLobbyEmpty()
-    {
+    isLobbyEmpty() {
         return (this.playerIds.length == 0);
     }
 
-    join(userId, googleUserId, socket)
-    {
+    join(userId, googleUserId, socket) {
         //Stops a user from joing a room twice
-        if (this.contains(userId) == false && this.status == GameLobby.LOBBY_STATS.WATTING_FOR_PLAYERS)
-        {
+        if (this.contains(userId) == false && this.status == GameLobby.LOBBY_STATS.WATTING_FOR_PLAYERS) {
             console.log("Player " + googleUserId + " added to gamelobby " + this.id + " and name " + this.name);
 
             // Add the player to the gameLobby socket.io room
@@ -176,35 +160,30 @@ class GameLobby
             }
 
             // Write the gameLobbyId to the users socket
-            socket.set(SOCKET_STORAGE_GAMELOBBY_ID, this.id);
+            socket.data[SOCKET_STORAGE_GAMELOBBY_ID] = this.id;
 
             this.playerIds.push(userId);
 
             //if the room is full start game
-            if (this.isFull())
-            {
+            if (this.isFull()) {
                 socket.emit(Events.gameLobby.START_GAME_HOST, this);
                 this.status = GameLobby.LOBBY_STATS.GAME_IN_PLAY;
 
-            } else
-            {
+            } else {
                 this.status = GameLobby.LOBBY_STATS.WATTING_FOR_PLAYERS;
             }
         }
     }
 
-    remove(userId)
-    {
-       var index = this.playerIds.indexOf(userId);
+    remove(userId) {
+        var index = this.playerIds.indexOf(userId);
 
-       if (index >= 0)
-       {
-           ServerUtilies.deleteFromCollection(this.playerIds, index);
-       }
+        if (index >= 0) {
+            ServerUtilies.deleteFromCollection(this.playerIds, index);
+        }
     }
 
-    isFull()
-    {
+    isFull() {
         return this.gameLobbyCapacity == this.playerIds.length;
     }
 
@@ -212,7 +191,6 @@ class GameLobby
 
 
 declare var exports: any;
-if (typeof exports != 'undefined')
-{
-    (module ).exports = GameLobby;
+if (typeof exports != 'undefined') {
+    (module).exports = GameLobby;
 }

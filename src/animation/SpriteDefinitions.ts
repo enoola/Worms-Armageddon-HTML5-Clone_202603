@@ -8,7 +8,7 @@
  * mySpriteObj.setSpriteDef(Sprites.worms.walking);
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 

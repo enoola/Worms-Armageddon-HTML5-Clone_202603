@@ -4,49 +4,42 @@
  * it also setup the request animation frame shim and the stats.js fps counter
  * 
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 declare var Stats;
 declare var $;
 
-class PreRenderer
-{
+class PreRenderer {
 
-    private createPreRenderCanvas(width,height)
-    {
+    private createPreRenderCanvas(width, height) {
         var bufferCanvas = <HTMLCanvasElement>document.createElement('canvas');
         bufferCanvas.width = width;
         bufferCanvas.height = height;
         return bufferCanvas.getContext("2d");
     }
 
-    render(drawFunc,width,height, canvas = null)
-    {   
+    render(drawFunc, width, height, canvas = null) {
         width += 2;
         height += 2;
         var ctx;
 
         // If we have a canvas thats we want to reRender onto
-        if (canvas)
-        {
+        if (canvas) {
             ctx = canvas.getContext('2d');
-        } else
-        {
+        } else {
             ctx = this.createPreRenderCanvas(width, height);
             ctx.translate(1, 1);
         }
-        
+
 
         drawFunc(ctx);
         return ctx.canvas;
     }
 
-    renderAnimation(drawFuncsCollection, width, height)
-    {
+    renderAnimation(drawFuncsCollection, width, height) {
         var ctx = this.createPreRenderCanvas(width, height);
-        for (var i in drawFuncsCollection)
-        {
+        for (var i in drawFuncsCollection) {
             drawFuncsCollection[i].call(ctx);
             ctx.translate(0, height);
         }
@@ -56,17 +49,14 @@ class PreRenderer
 
 }
 
-module Graphics
-{
+module Graphics {
 
-    export var stats;    
+    export var stats;
 
     export var preRenderer = new PreRenderer();
 
-    export function init()
-    {
-        if (Settings.DEVELOPMENT_MODE)
-        {
+    export function init() {
+        if (Settings.DEVELOPMENT_MODE) {
             stats = new Stats();
 
             // Align top-left
@@ -78,26 +68,23 @@ module Graphics
         }
 
         // requestAnim shim layer by Paul Irish
-        window.requestAnimationFrame = (function ()
-        {
+        window.requestAnimationFrame = (function () {
             return window.requestAnimationFrame ||
                 (<any>window).webkitRequestAnimationFrame ||
                 (<any>window).mozRequestAnimationFrame ||
                 (<any>window).oRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-            function ( /* function */ callback, /* DOMElement */ element)
-            {
-                window.setTimeout(callback, 1000 / 60);
-                return true;
-            };
+                (<any>window).msRequestAnimationFrame ||
+                function ( /* function */ callback, /* DOMElement */ element) {
+                    window.setTimeout(callback, 1000 / 60);
+                    return true;
+                };
 
         })();
 
     }
 
     // may be useful in the furture for drawing rounded conor boxes for over the players head
-    export function roundRect(ctx, x, y, w, h, r)
-    {
+    export function roundRect(ctx, x, y, w, h, r) {
         if (w < 2 * r) r = w / 2;
         if (h < 2 * r) r = h / 2;
         ctx.beginPath();
@@ -110,8 +97,7 @@ module Graphics
         return ctx;
     }
 
-    export function createCanvas(name: string)
-    {
+    export function createCanvas(name: string) {
 
         var canvas = <HTMLCanvasElement>document.createElement('canvas');
         canvas.id = name;
@@ -123,8 +109,7 @@ module Graphics
         window.document.body.appendChild(canvas);
 
         //Disable context menu so I can use right click for game controls
-        $('body').on('contextmenu', "#" + name, function (e)
-        {
+        $('body').on('contextmenu', "#" + name, function (e) {
             return false;
         });
 

@@ -4,7 +4,7 @@
  * It also defines the controls for the worms movements.
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 ///<reference path="Team.ts"/>
@@ -26,7 +26,7 @@ class Player
         this.team = new Team(playerId);
 
         // Global window keyup event
-        $(window).keyup(function (e) =>
+        $(window).keyup((e) =>
         {
             // Dectects keyup on fire button
             if (e.which == Controls.fire.keyboard)

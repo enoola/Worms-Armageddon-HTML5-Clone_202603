@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html manifest="offline.appcache">
+<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
@@ -22,7 +22,7 @@
     <script src="src/Worms.js"></script>
 
     <!-- Socket.io -->
-    <script src="http://96.126.111.211:8080/socket.io/socket.io.js"></script>
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
 </head>
 <body>
     <div class="alert" id="notifaction"><strong></strong>
@@ -97,9 +97,9 @@
 
             <p style="text-align: center">
 
-                <a class="btn btn-primary btn-large" id="startTutorial" disabled="disabled">Noobs tutorial</a>
-                <a class="btn btn-primary btn-large" id="startLocal" disabled="disabled">Local two player</a>
-                <a class="btn btn-primary btn-large" id="startOnline" disabled="disabled">Online multiplayer</a>
+                <a class="btn btn-primary btn-large" href="#" id="startTutorial" disabled="disabled">Noobs tutorial</a>
+                <a class="btn btn-primary btn-large" href="#" id="startLocal" disabled="disabled">Local two player</a>
+                <a class="btn btn-primary btn-large" href="#" id="startOnline" disabled="disabled">Online multiplayer</a>
             </p>
             <div id="notice" style="font-size: 14px"></div>
             <div style="background: none; margin-top: 20px;">
@@ -122,8 +122,9 @@
                     </span>
 
               <div style="margin-top: -33px; position: absolute; left: 60px;">
-                  <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-                  <script type="IN/Share" data-url="http://www.ciaranmccann.me/wormsjs/" data-counter="right"></script>
+                 <!-- <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+                  <script type="IN/Share" data-url="http://www.ciaranmccann.me/wormsjs/" data-counter="right"></script> 
+                  -->
               </div>
 
 

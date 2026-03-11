@@ -2,7 +2,7 @@
  * GameStateManager.js
  *
  *  License: Apache 2.0
- *  author:  Ciarán McCann
+ *  author:  Ciarn McCann
  *  url: http://www.ciaranmccann.me/
  */
 ///<reference path="system/Camera.ts"/>
@@ -16,11 +16,11 @@
 
 class GameStateManager
 {
-    private nextTurnTrigger: bool;
+    private nextTurnTrigger: boolean;
     private currentPlayerIndex: number;
     private players: Player[];
-    isStarted: bool;
-    physicsWorldSettled: bool;
+    isStarted: boolean;
+    physicsWorldSettled: boolean;
 
     constructor()
     {
